@@ -31,123 +31,100 @@ function operate(num1, num2, operator) {
     }
 }
 
-// let num1 = 0;
-// let num2 = 0;
-// let operator = "";
-// let num1Start = false;
-// let num1In = false;
-// let operatorIn = false;
-// let num2Start = false;
-// let num2In = false;
-
-// const buttons = document.querySelectorAll("button");
-// const display = document.querySelector(".text")
-
-// let buttonsArr = [];
-
-// buttons.forEach((button) => {
-//     button.addEventListener("click", () => {
-//         if (Number.isInteger(Number(button.textContent))) {
-            
-//             if (num1In && operatorIn) {
-//                 display.textContent = button.textContent;
-//                 num2 = Number(button.textContent);
-//                 num2In = true;
-//             } else {
-//                 display.textContent = button.textContent;
-//                 num1 = Number(button.textContent);
-//                 num1In = true;
-//             }
-//         } else {
-//             if (!operatorIn && num1In) {
-//                 operator = button.textContent;
-//                 operatorIn = true;
-//             } else if (num2In && !button.textContent === "=") {
-//                 display.textContent = operate(num1, num2, operator);
-//                 num1In = true;
-//                 num2In = false;
-//                 operatorIn = true;
-
-//                 num1 = operate(num1, num2, operator);
-//                 num2 = 0;
-//                 operator = button.textContent;
-//             } else {
-//                 display.textContent = operate(num1, num2, operator);
-//                 num1In = true;
-//                 num2In = false;
-//                 operatorIn = false;
-
-//                 num1 = operate(num1, num2, operator);
-//                 num2 = 0;
-//             }
-//         }
-        
-//     })
-// });
-
-let num1 = 0;
-let num2 = 0;
-let operator = "";
-let num1Start = false;
-let num1In = false;
-let operatorIn = false;
-let num2Start = false;
-let num2In = false;
-
 const buttons = document.querySelectorAll("button");
 const display = document.querySelector(".text")
 
 let buttonsArr = [];
 
+let previousValue = "";
+let currentValue = "";
+let operator = "";
+let operatorPressed = false;
+let currentInput = "";
+let previousButton = "";
+
 buttons.forEach((button) => {
     button.addEventListener("click", () => {
-        // if number is pressed
-        if (Number.isInteger(Number(button.textContent))) {
-            
-            if (operatorIn && num2Start) {
-                display.textContent = button.textContent;
-                num2Start = true;
-                console.log("num2 started");
-            } else if (!num1Start) {
-                display.textContent = button.textContent;
-                num1Start = true;
-                console.log("num 1 started");
-            } else {
-                display.textContent += button.textContent;
-            }
-           
-        } 
-        // if operator is pressed
-        else if (button.textContent !== "=") {
 
-            if (num1Start) {
-                console.log("operator - num1 start = true")
-                num1In = true;
-                num1 = Number(display.textContent);
-                operator = button.textContent;
-                operatorIn = true;
-                num1Start = false;
-                num2Start = true;
-            } else if (num2Start) { // num2Start = true:
-                console.log("operator - num2 start = true")
-                num2 = Number(display.textContent);
-                display.textContent = operate(num1, num2, button.textContent);
-                num1 = Number(display.textContent);
-                operator = button.textContent;
-                num1In = true;
-                operatorIn = true;
-            } 
-            
-        } else {
-            console.log("= clicked")
-            num2 = Number(display.textContent);
-            display.textContent = operate(num1, num2, operator);
-            num1In = true;
-            operatorIn = false;
-            num1Start = true;
-
-            num1 = Number(display.textContent);
+        // when "clear" is pressed
+        if (button.textContent === "clear") {
+            previousValue = "";
+            currentValue = "";
+            operator = "";
+            operatorPressed = false;
+            currentInput = "";
+            display.textContent = "0";
+            previousButton = "";
         }
-        
-    })
+        // when "=" is pressed
+        else if (button.textContent === "=") {
+            currentInput = display.textContent;
+            previousValue = currentValue;
+            currentValue = operate(Number(previousValue), Number(currentInput), operator);
+            display.textContent = currentValue;
+            operatorPressed = false;
+            previousButton = "=";
+            console.log(`=: previousValue: ${previousValue}; currentValue: ${currentValue}`);
+        }
+        // when a digit is pressed
+        else if (Number.isInteger(Number(button.textContent))) {
+            if (operatorPressed) {
+                currentInput = button.textContent;
+                display.textContent = currentInput;
+                operatorPressed = false;
+                console.log(`another num: ${currentInput}`);
+                previousButton = "";
+            } else {
+                if (previousButton === "=") {
+                    previousValue = "";
+                    currentValue = "";
+                    currentInput = "";
+                    currentInput = button.textContent;
+                    console.log(`first num: ${currentInput}`);
+                    display.textContent = currentInput;
+                    previousButton = "";
+                } else {
+                    currentInput += button.textContent;
+                    console.log(`first num: ${currentInput}`);
+                    display.textContent = currentInput;
+                    previousButton = "";
+                }  
+            }
+        } 
+        // when operator is pressed
+        else {
+            // operator = button.textContent;
+            // if (previousValue === "") {
+            //     (operator === "*" || operator === "/") ? previousValue = 1 : previousValue = 0;
+            // } else {previousValue = display.textContent};
+
+            // currentValue === "" ? currentValue = currentInput : currentValue;
+            // console.log(currentValue);
+            // operatorPressed = true;
+            // currentValue = operate(Number(previousValue), Number(currentValue), operator);
+            // display.textContent = currentValue;
+            // console.log(`operator: ${operator}; previousValue: ${previousValue}; currentInput: ${currentInput}; currentValue: ${currentValue}`);
+            if (previousValue === "" || previousButton === "=") {
+                operator = button.textContent;
+                previousValue = display.textContent;
+                currentValue === "" ? currentValue = currentInput : currentValue;
+                operatorPressed = true;
+                console.log(currentValue);
+                console.log(`operator 1: ${operator}; previousValue: ${previousValue}; currentInput: ${currentInput}; currentValue: ${currentValue}`);
+                previousButton = "";
+            } else {
+                currentInput = display.textContent
+                previousValue = currentValue;
+                operatorPressed = true;
+                console.log(currentValue);
+                currentValue = operate(Number(previousValue), Number(currentInput), operator);
+                display.textContent = currentValue;
+                previousButton = "";
+                operator = button.textContent;
+                console.log(`operator 2: ${operator}; previousValue: ${previousValue}; currentInput: ${currentInput}; currentValue: ${currentValue}`);
+
+            };
+
+        }
+    });
 });
