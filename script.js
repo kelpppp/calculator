@@ -93,17 +93,6 @@ buttons.forEach((button) => {
         } 
         // when operator is pressed
         else {
-            // operator = button.textContent;
-            // if (previousValue === "") {
-            //     (operator === "*" || operator === "/") ? previousValue = 1 : previousValue = 0;
-            // } else {previousValue = display.textContent};
-
-            // currentValue === "" ? currentValue = currentInput : currentValue;
-            // console.log(currentValue);
-            // operatorPressed = true;
-            // currentValue = operate(Number(previousValue), Number(currentValue), operator);
-            // display.textContent = currentValue;
-            // console.log(`operator: ${operator}; previousValue: ${previousValue}; currentInput: ${currentInput}; currentValue: ${currentValue}`);
             if (previousValue === "" || previousButton === "=") {
                 operator = button.textContent;
                 previousValue = display.textContent;
